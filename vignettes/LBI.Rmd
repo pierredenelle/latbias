@@ -1,0 +1,121 @@
+---
+title: "LBI tutorial"
+author: "Pierre Denelle & Pieter Sanczuk"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+ %\VignetteIndexEntry{LBI tutorial}
+ %\VignetteEncoding{UTF-8} 
+ %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+ chunk_output_type: console
+---
+
+<style>
+body {
+text-align: justify}
+</style>
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      fig.width = 4, fig.height = 4, fig.align = "center")
+# Packages --------------------------------------------------------------------
+suppressPackageStartupMessages({
+  suppressWarnings({
+    library("latbias")
+    library("sf")
+    library("elevatr")
+    library("rnaturalearth")
+  })
+})
+
+options(tinytex.verbose = TRUE)
+```
+
+<br>
+
+LBI stands for Latitudinal Bias Index.
+
+1. Retrieving plant checklists within a given area (example: Mediterranean)  
+2. Getting the distribution of a plant species  
+3. Retrieving trait information for a subset of plant species  
+4. Retrieving environmental information for a list of polygons/regions  
+5. Retrieving a plant phylogeny and plotting a trait coverage on it  
+
+<br>
+
+The following R packages are required to build this vignette:
+
+```{r, echo=TRUE, eval=FALSE}
+library("latbias")
+library("sf")
+library("elevatr")
+library("rnaturalearth")
+```
+
+<br><br>
+
+# 1. Latitudinal Bias Index (LBI)
+The LBI, representing the probability to detect more pronounced latitudinal rather than longitudinal range shifts due to the polygon geometry.  
+It is calculated as the odd-ratio of latitudinal and longitudinal distances, following this equation:
+
+$$LBI = 2\times(\frac{mean(|\frac{A_nlat}{A_nlon}|)}{1+mean(|\frac{A_nlat}{A_nlon}|)}-0.5)$$
+
+with $A_nlat$ and $A_nlon$ denoting the geographic displacement of the centroid positions of both sets of observation in the $n^{th}$ iteration by means in the latitudinal and the longitudinal dimension.  
+
+An LBI value of zero represents a perfect balanced study design, meaning that the likelihood to record more pronounced latitudinal range shifts due to the study area geometry is 0%. By contrast, an LBI value of +1 denotes a 100% probability to exclusively record latitudinal shifts as would be the case for range shift data recorded along a perfectly South-North oriented straight line, whereas and an LBI value of -1 indicates a 100% probability to exclusively record longitudinal shifts as would be the case for range shift data recorded along a perfectly East-West oriented straight line.
+
+# 2. Computing the LBI
+
+We first take the polygon delineating Sweden as an example.  
+
+```{r study_case, fig.width = 3, fig.height = 3}
+study_area <- rnaturalearth::ne_countries(scale = 50, continent = "Europe",
+country = "Sweden", type = "map_units", returnclass = "sf")
+study_area <- sf::st_union(study_area)
+```
+
+We then calculate the LBI with the shape of Sweden.  
+
+```{r LBI_calculation, fig.width = 3, fig.height = 3}
+lbi_sweden <-
+  LBI(study_area_id = "Sweden", study_area_polygon = study_area,
+      nobs = 100, nboot = 500, fact_location = 10, elevation = NA)
+
+lbi_sweden
+```
+
+
+We can also include elevation.
+
+```{r LBI_elevation, fig.width = 3, fig.height = 3}
+# With elevation
+elevation_df <- elevatr::get_elev_raster(locations = st_as_sf(study_area),
+                                         z = 5)
+```
+
+<br>
+
+# 3. Plotting one windrose
+
+```{r one_bootstrap}
+lbi_sweden_all <-
+  LBI(study_area_id = "Sweden", study_area_polygon = study_area,
+      nobs = 100, nboot = 500, fact_location = 10, elevation = NA,
+      bootstrap_output = TRUE)
+```
+
+Windrose function.
+
+```{r windrose}
+
+```
+
+# 4. References
+
+When using the LBI R package, please cite the following reference:  
+
+Sanczuk, P., Lenoir, J., Denelle, P., Rumpf, S.B., Borderieux, J., Geppert, C., Oliveira, B.F. & Staude, I.R. Global bias towards recording latitudinal range shifts. *submitted* 
