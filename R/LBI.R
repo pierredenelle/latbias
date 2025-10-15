@@ -18,8 +18,8 @@
 #' that can be included in each iteration; aims to optimize the calculation
 #' time).
 #' 
-#' @param elevation Elevation raster. elevation in wgs84; if not provided, NA will be
-#' returned for null-model elevational shifts.
+#' @param elevation Elevation raster. elevation in wgs84; if not provided,
+#' NA will be returned for null-model elevational shifts.
 #'
 #' @param bootstrap_output Logical. FALSE by default. If TRUE, all bootstraps
 #' are returned as a data.frame.
@@ -46,7 +46,7 @@
 #' study_area <- sf::st_union(study_area)
 #' 
 #' LBI(study_area_id = "Sweden", study_area_polygon = study_area,
-#' nobs = 10, nboot = 10, fact_location = 10, elevation = NA)
+#' nobs = 10, nboot = 10, fact_location = 10, elevation = NULL)
 #' \donttest{
 #' # With elevation
 #' elevation_df <- elevatr::get_elev_raster(
@@ -76,6 +76,16 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   controls(args = nboot, data = NULL, type = "strict_positive_integer")
   controls(args = fact_location, data = NULL, type = "strict_positive_integer")
   controls(args = bootstrap_output, data = NULL, type = "logical")
+  
+  if(!is.null(elevation)){
+    # if(is.na(elevation)){
+    #   stop("elevation must be an unprojected (WGS84) RasterLayer.")
+    # }
+    if(as.character(class(elevation)) != "RasterLayer"){
+      stop("class(elevation) != 'RasterLayer'
+           elevation must be an unprojected (WGS84) RasterLayer.")
+    }
+  }
   
   # Visible binding for global variable
   survey <- elev <- X <- Y <- mean_X <- mean_Y <- km <- m <- NULL
@@ -115,14 +125,10 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   # add ID info
   random_points$study_area_id <- study_area_id
   
-  # If elevation is provided
-  # extract elevation data for each location for elevation: data source WorldClim 30s
-  # resolution elevation (wgs84)
-  if(!is.null(elevation)){
-    random_points$elev <- ifelse(class(elevation) == "RasterLayer",
-                                 terra::extract(elevation, random_points), NA)
-  }
-  
+  # If elevation is provided, extract elevation data for each location
+  random_points$elev <- ifelse(class(elevation) == "RasterLayer",
+                               terra::extract(elevation, random_points), NA)
+
   # project to local projection to avoid spatial distortion
   random_points <- sf::st_transform(random_points, proj) 
   
@@ -171,7 +177,7 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
                                            values_to = "survey")
   } else{
     param_positions <- tidyr::pivot_longer(random_points_no_geom,
-                                           cols = c("X", "Y"),
+                                           cols = dplyr::contains("subset"), #c("X", "Y"),
                                            names_to = "rep",
                                            values_to = "survey")
   }
@@ -214,10 +220,21 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
                                           names_from = "survey",
                                           values_from = c("geometry")) 
   }
+  
+  # Rename columns (needed when elevation is NULL)
+  if("t1" %in% colnames(param_positions)){
+    colnames(param_positions)[colnames(param_positions) == "t1"] <-
+      "geometry_t1"
+    colnames(param_positions)[colnames(param_positions) == "t2"] <-
+      "geometry_t2"
+  }
+  
+  # Absolute distance
   param_positions$abs_distance_km <-
     sf::st_distance(param_positions$geometry_t1,
                     param_positions$geometry_t2,
                     by_element = TRUE)
+  
   param_positions$abs_distance_km <-
     units::set_units(param_positions$abs_distance_km, km)
   if(!is.null(elevation)){
@@ -234,11 +251,11 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
                                                  crs = wgs84)
   param_positions_bearing_t2 <- sf::st_coordinates(param_positions_bearing_t2)
   
-  param_positions$bearing <- geosphere::bearingRhumb(
-    param_positions_bearing_t1, 
-    param_positions_bearing_t2)
+  param_positions$bearing <-
+    geosphere::bearingRhumb(param_positions_bearing_t1, 
+                            param_positions_bearing_t2)
   
-  # calculate projected South-North and East-West distances
+  # Calculate projected South-North and East-West distances
   param_positions$NS_dist <- abs(param_positions$abs_distance_km *
                                    cos((param_positions$bearing)*(pi/180)))
   param_positions$EW_dist <- abs(param_positions$abs_distance_km *

@@ -25,17 +25,18 @@ windrose(
 
 \item{dir}{bearing column}
 
-\item{spdres}{= 30, #adapt here the legend and breaks}
+\item{spdres}{= 30 Numeric. Adapt here the legend and breaks}
 
-\item{dirres}{= 30,  #resolution of bearings}
+\item{dirres}{= 30 Numeric, resolution of bearings.}
 
-\item{spdmin}{= 0, #and here min}
+\item{spdmin}{= 0 Numeric. min}
 
-\item{spdmax}{= 150,#and here max; check as max}
+\item{spdmax}{= 150 Numeric, max.}
 
 \item{spdseq}{= NULL}
 
-\item{palette}{= "Spectral"}
+\item{palette}{Character string defining the color palette to be used.
+Available options are taken from rownames(RColorBrewer::brewer.pal.info).}
 
 \item{countmax}{= NA}
 
@@ -57,7 +58,7 @@ study_area <- rnaturalearth::ne_countries(scale = 110, continent = "Europe",
 country = "Sweden", type = "map_units", returnclass = "sf")
 study_area <- sf::st_union(study_area)
 po <- LBI(study_area_id = "Sweden", study_area_polygon = study_area,
-nobs = 10, nboot = 10, fact_location = 10, elevation = NA,
+nobs = 10, nboot = 10, fact_location = 10, elevation = NULL,
 bootstrap_output = TRUE)
 test <- as.data.frame(po$all[, c("study_area_id", "abs_distance_km",
 "bearing", "rep")])

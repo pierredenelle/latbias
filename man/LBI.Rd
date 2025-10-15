@@ -29,8 +29,8 @@ sampled (value that multiplies nobs to predefined the coordinate locations
 that can be included in each iteration; aims to optimize the calculation
 time).}
 
-\item{elevation}{Elevation raster. elevation in wgs84; if not provided, NA will be
-returned for null-model elevational shifts.}
+\item{elevation}{Elevation raster. elevation in wgs84; if not provided,
+NA will be returned for null-model elevational shifts.}
 
 \item{bootstrap_output}{Logical. FALSE by default. If TRUE, all bootstraps
 are returned as a data.frame.}
@@ -62,7 +62,7 @@ country = "Sweden", type = "map_units", returnclass = "sf")
 study_area <- sf::st_union(study_area)
 
 LBI(study_area_id = "Sweden", study_area_polygon = study_area,
-nobs = 10, nboot = 10, fact_location = 10, elevation = NA)
+nobs = 10, nboot = 10, fact_location = 10, elevation = NULL)
 \donttest{
 # With elevation
 elevation_df <- elevatr::get_elev_raster(

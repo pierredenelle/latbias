@@ -8,17 +8,18 @@
 #' 
 #' @param dir bearing column
 #' 
-#' @param spdres = 30, #adapt here the legend and breaks
+#' @param spdres = 30 Numeric. Adapt here the legend and breaks
 #' 
-#' @param dirres = 30,  #resolution of bearings
+#' @param dirres = 30 Numeric, resolution of bearings.
 #' 
-#' @param spdmin = 0, #and here min
+#' @param spdmin = 0 Numeric. min
 #' 
-#' @param spdmax = 150,#and here max; check as max
+#' @param spdmax = 150 Numeric, max.
 #' 
 #' @param spdseq = NULL
 #' 
-#' @param palette = "Spectral"
+#' @param palette Character string defining the color palette to be used.
+#' Available options are taken from rownames(RColorBrewer::brewer.pal.info).
 #' 
 #' @param countmax = NA
 #' 
@@ -40,7 +41,7 @@
 #' country = "Sweden", type = "map_units", returnclass = "sf")
 #' study_area <- sf::st_union(study_area)
 #' po <- LBI(study_area_id = "Sweden", study_area_polygon = study_area,
-#' nobs = 10, nboot = 10, fact_location = 10, elevation = NA,
+#' nobs = 10, nboot = 10, fact_location = 10, elevation = NULL,
 #' bootstrap_output = TRUE)
 #' test <- as.data.frame(po$all[, c("study_area_id", "abs_distance_km",
 #' "bearing", "rep")])
