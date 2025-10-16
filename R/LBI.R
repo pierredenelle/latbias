@@ -77,6 +77,7 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   # Control arguments
   controls(args = study_area_id, data = NULL,
            type = "character_or_positive_integer")
+  study_area_polygon <- check_study_area(study_area = study_area_polygon)
   controls(args = nobs, data = NULL, type = "strict_positive_integer")
   controls(args = nboot, data = NULL, type = "strict_positive_integer")
   controls(args = fact_location, data = NULL, type = "strict_positive_integer")
