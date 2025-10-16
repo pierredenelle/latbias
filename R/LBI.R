@@ -4,36 +4,41 @@
 #' calculating the distance between two random locations within the shape
 #' multiple times (see details).
 #'
-#' @param study_area_id Character string. Name ID of the study or country.
+#' @param study_area_id Character string. Name ID of the study case area or
+#' country name.
 #' 
-#' @param study_area_polygon Polygon shape 
+#' @param study_area_polygon Polygon shapefile 
 #' 
 #' @param nobs Numeric, number of random observations in each sample
-#' 250 by default
+#' 250 by default => IMPROVE EXPLANATION
 #' 
-#' @param nboot Numeric, null model iterations. 1,000 by default
-#' 
+#' @param nboot Numeric, null model iterations. 1,000 by default => IMPROVE how many times the random shifts are calculated
+#'#' 
 #' @param fact_location Numeric. All possible coordinate locations that can be
 #' sampled (value that multiplies nobs to predefined the coordinate locations
 #' that can be included in each iteration; aims to optimize the calculation
-#' time).
+#' time). => revise the text
 #' 
 #' @param elevation Elevation raster. elevation in wgs84; if not provided,
 #' NA will be returned for null-model elevational shifts.
+#' => class RasterLayer to update to terra
 #'
-#' @param bootstrap_output Logical. FALSE by default. If TRUE, all bootstraps
-#' are returned as a data.frame.
+#' @param raw_output Logical. FALSE by default. If TRUE, all bootstraps
+#' are returned as a data.frame. => say that the raw outputs are accessible
 #'
 #' @return
-#' A data.frame or a list of two data.frames if bootstrap_output is set to TRUE.
+#' A data.frame or a list of two data.frames if raw_output is set to TRUE.
 #'
 #' @details The main output contains the following columns:
 #' - study_area_id: ID or name of the study case region
-#' - abs_distance_km: average expected distance shift between t1 and t2
-#' - null_mod_NS_shift: average expected North-South shift between t1 and t2
-#' - null_mod_EW_shift: average expected East-West shift between t1 and t2
-#' - null_mod_elevation_shift: average expected elevation shift between t1 and
+#' - abs_distance_km: average expected geographic distance shift between t1 and
 #'  t2
+#' - null_mod_NS_shift: average expected North-South shift between t1 and t2,
+#' in absolute values
+#' - null_mod_EW_shift: average expected East-West shift between t1 and t2,
+#' in absolute values
+#' - null_mod_elevation_shift: average expected elevation shift between t1 and
+#'  t2, in absolute values
 #' - LBI: the Latitudinal Bias Index value
 #' 
 #' @references
@@ -67,7 +72,7 @@
 
 LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,      
                 fact_location = 10, elevation = NULL,
-                bootstrap_output = FALSE){
+                raw_output = FALSE){
   
   # Control arguments
   controls(args = study_area_id, data = NULL,
@@ -75,7 +80,7 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   controls(args = nobs, data = NULL, type = "strict_positive_integer")
   controls(args = nboot, data = NULL, type = "strict_positive_integer")
   controls(args = fact_location, data = NULL, type = "strict_positive_integer")
-  controls(args = bootstrap_output, data = NULL, type = "logical")
+  controls(args = raw_output, data = NULL, type = "logical")
   
   if(!is.null(elevation)){
     # if(is.na(elevation)){
@@ -96,7 +101,7 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   
   # coordinate reference system
   wgs84 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
-  # equal area CRS
+  # Mollweide equal area CRS
   moll <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84"
   
   # Defining local projection
@@ -261,8 +266,8 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   param_positions$EW_dist <- abs(param_positions$abs_distance_km *
                                    sin((param_positions$bearing)*(pi/180)))
   
-  # Saving all bootstraps when bootstrap_output is TRUE
-  if(isTRUE(bootstrap_output)){
+  # Saving all bootstraps when raw_output is TRUE
+  if(isTRUE(raw_output)){
     all_bootstraps <- param_positions
   }
   
@@ -303,7 +308,7 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   # Convert as data.frame
   param_positions_summary <- as.data.frame(param_positions_summary)
   
-  if(isTRUE(bootstrap_output)){
+  if(isTRUE(raw_output)){
     return(list(all = all_bootstraps,
                 summary = param_positions_summary))
   } else{

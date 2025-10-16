@@ -11,32 +11,35 @@ LBI(
   nboot = 1000,
   fact_location = 10,
   elevation = NULL,
-  bootstrap_output = FALSE
+  raw_output = FALSE
 )
 }
 \arguments{
-\item{study_area_id}{Character string. Name ID of the study or country.}
+\item{study_area_id}{Character string. Name ID of the study case area or
+country name.}
 
-\item{study_area_polygon}{Polygon shape}
+\item{study_area_polygon}{Polygon shapefile}
 
 \item{nobs}{Numeric, number of random observations in each sample
-250 by default}
+250 by default => IMPROVE EXPLANATION}
 
-\item{nboot}{Numeric, null model iterations. 1,000 by default}
+\item{nboot}{Numeric, null model iterations. 1,000 by default => IMPROVE how many times the random shifts are calculated
+#'}
 
 \item{fact_location}{Numeric. All possible coordinate locations that can be
 sampled (value that multiplies nobs to predefined the coordinate locations
 that can be included in each iteration; aims to optimize the calculation
-time).}
+time). => revise the text}
 
 \item{elevation}{Elevation raster. elevation in wgs84; if not provided,
-NA will be returned for null-model elevational shifts.}
+NA will be returned for null-model elevational shifts.
+=> class RasterLayer to update to terra}
 
-\item{bootstrap_output}{Logical. FALSE by default. If TRUE, all bootstraps
-are returned as a data.frame.}
+\item{raw_output}{Logical. FALSE by default. If TRUE, all bootstraps
+are returned as a data.frame. => say that the raw outputs are accessible}
 }
 \value{
-A data.frame or a list of two data.frames if bootstrap_output is set to TRUE.
+A data.frame or a list of two data.frames if raw_output is set to TRUE.
 }
 \description{
 Computes the Latitudinal Bias Index (LBI) for a given shapefile, by
@@ -47,11 +50,14 @@ multiple times (see details).
 The main output contains the following columns:
 \itemize{
 \item study_area_id: ID or name of the study case region
-\item abs_distance_km: average expected distance shift between t1 and t2
-\item null_mod_NS_shift: average expected North-South shift between t1 and t2
-\item null_mod_EW_shift: average expected East-West shift between t1 and t2
-\item null_mod_elevation_shift: average expected elevation shift between t1 and
+\item abs_distance_km: average expected geographic distance shift between t1 and
 t2
+\item null_mod_NS_shift: average expected North-South shift between t1 and t2,
+in absolute values
+\item null_mod_EW_shift: average expected East-West shift between t1 and t2,
+in absolute values
+\item null_mod_elevation_shift: average expected elevation shift between t1 and
+t2, in absolute values
 \item LBI: the Latitudinal Bias Index value
 }
 }

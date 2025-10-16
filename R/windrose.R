@@ -42,7 +42,7 @@
 #' study_area <- sf::st_union(study_area)
 #' po <- LBI(study_area_id = "Sweden", study_area_polygon = study_area,
 #' nobs = 10, nboot = 10, fact_location = 10, elevation = NULL,
-#' bootstrap_output = TRUE)
+#' raw_output = TRUE)
 #' test <- as.data.frame(po$all[, c("study_area_id", "abs_distance_km",
 #' "bearing", "rep")])
 #' test$abs_distance_km <- as.numeric(test$abs_distance_km)

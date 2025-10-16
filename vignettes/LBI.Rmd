@@ -109,7 +109,7 @@ lbi_elev <- LBI(study_area_id = "Sweden", study_area_polygon = study_area,
 lbi_sweden_all <-
   LBI(study_area_id = "Sweden", study_area_polygon = study_area,
       nobs = 100, nboot = 500, fact_location = 10, elevation = NULL,
-      bootstrap_output = TRUE)
+      raw_output = TRUE)
 ```
 
 Windrose function.
