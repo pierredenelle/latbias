@@ -19,37 +19,43 @@ windrose(
 )
 }
 \arguments{
-\item{data}{data frame with bearing and speed}
+\item{data}{ddata frame with two columns including the bearing and distance
+or speed of shifts}
 
-\item{spd}{speed column}
+\item{spd}{distance or speed column}
 
 \item{dir}{bearing column}
 
-\item{spdres}{= 30 Numeric. Adapt here the legend and breaks}
+\item{spdres}{30 by default. Numeric; resolution for plotting distance of
+speed categories; adapt here the legend and breaks.}
 
-\item{dirres}{= 30 Numeric, resolution of bearings.}
+\item{dirres}{30 by default. Numeric, resolution for plotting bearings on
+windrose; adapt here the number of bars plotted on the windrose.}
 
-\item{spdmin}{= 0 Numeric. min}
+\item{spdmin}{0 by default. Numeric, minimal distance/speed for plotting.}
 
-\item{spdmax}{= 150 Numeric, max.}
+\item{spdmax}{150 by default. Numeric, maximal distance/speed for plotting.}
 
-\item{spdseq}{= NULL}
+\item{spdseq}{NULL}
 
 \item{palette}{Character string defining the color palette to be used.
 Available options are taken from rownames(RColorBrewer::brewer.pal.info).}
 
-\item{countmax}{= NA}
+\item{countmax}{NA by default. Numeric, optional, adjust the y-axis limit
+(maximum)}
 
-\item{debug}{=}
+\item{debug}{0 by default. Numeric, if >0, run debug to find optimal bins of
+spd and dir.}
 }
 \value{
-A plot.
+Windrose plot, ggplot object.
 }
 \description{
 Plot the directional shifts for a given bootstrap.
 }
 \details{
-Windrose.
+This is intended to plot raw simulation output (that is, bearing
+and distance of random shifts) on a windrose.
 }
 \examples{
 

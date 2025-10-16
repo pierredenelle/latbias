@@ -18,22 +18,22 @@ LBI(
 \item{study_area_id}{Character string. Name ID of the study case area or
 country name.}
 
-\item{study_area_polygon}{Polygon shapefile}
+\item{study_area_polygon}{Polygon shapefile. It should be a sfc object, of
+class POLYGON or MULTIPOLYGON.}
 
-\item{nobs}{Numeric, number of random observations in each sample
-250 by default => IMPROVE EXPLANATION}
+\item{nobs}{Numeric. Number of random observations in each sample. 250 by
+default.}
 
-\item{nboot}{Numeric, null model iterations. 1,000 by default => IMPROVE how many times the random shifts are calculated
-#'}
+\item{nboot}{Numeric. Determines how many times the random shifts are
+calculated. 1,000 by default.}
 
-\item{fact_location}{Numeric. All possible coordinate locations that can be
-sampled (value that multiplies nobs to predefined the coordinate locations
-that can be included in each iteration; aims to optimize the calculation
-time). => revise the text}
+\item{fact_location}{Numeric. fact_location x nobs determine all the
+possible coordinates that can be sampled within the provided polygon for all
+bootstraps (faster than to generate a set of random location at each
+bootstrap)}
 
 \item{elevation}{Elevation raster. elevation in wgs84; if not provided,
-NA will be returned for null-model elevational shifts.
-=> class RasterLayer to update to terra}
+NA will be returned for null-model elevational shifts.}
 
 \item{raw_output}{Logical. FALSE by default. If TRUE, all bootstraps
 are returned as a data.frame. => say that the raw outputs are accessible}
@@ -60,6 +60,12 @@ in absolute values
 t2, in absolute values
 \item LBI: the Latitudinal Bias Index value
 }
+
+LBI formula is
+LBI = 2 x (mean(|Anlat/Anlon|)/(1+mean(|Anlat/Anlon|)-0.5)
+with Anlat and Anlon denoting the geographic displacement of the centroid
+positions of both sets of observation in the nth iteration by means in the
+latitudinal and the longitudinal dimension.
 }
 \examples{
 

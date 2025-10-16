@@ -2,34 +2,39 @@
 #'
 #' Plot the directional shifts for a given bootstrap.
 #'
-#' @param data data frame with bearing and speed
+#' @param data ddata frame with two columns including the bearing and distance
+#' or speed of shifts
 #' 
-#' @param spd speed column
+#' @param spd distance or speed column
 #' 
 #' @param dir bearing column
 #' 
-#' @param spdres = 30 Numeric. Adapt here the legend and breaks
+#' @param spdres 30 by default. Numeric; resolution for plotting distance of
+#' speed categories; adapt here the legend and breaks.
 #' 
-#' @param dirres = 30 Numeric, resolution of bearings.
+#' @param dirres 30 by default. Numeric, resolution for plotting bearings on
+#' windrose; adapt here the number of bars plotted on the windrose.
 #' 
-#' @param spdmin = 0 Numeric. min
+#' @param spdmin 0 by default. Numeric, minimal distance/speed for plotting.
 #' 
-#' @param spdmax = 150 Numeric, max.
+#' @param spdmax 150 by default. Numeric, maximal distance/speed for plotting.
 #' 
-#' @param spdseq = NULL
+#' @param spdseq NULL
 #' 
 #' @param palette Character string defining the color palette to be used.
 #' Available options are taken from rownames(RColorBrewer::brewer.pal.info).
 #' 
-#' @param countmax = NA
+#' @param countmax NA by default. Numeric, optional, adjust the y-axis limit
+#' (maximum)
 #' 
-#' @param debug = 
-#' 
+#' @param debug 0 by default. Numeric, if >0, run debug to find optimal bins of
+#' spd and dir.
 #' 
 #' @return
-#' A plot.
+#' Windrose plot, ggplot object.
 #'
-#' @details Windrose.
+#' @details This is intended to plot raw simulation output (that is, bearing
+#' and distance of random shifts) on a windrose.
 #' 
 #' @references
 #'      Sanczuk et al. submitted.
