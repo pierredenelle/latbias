@@ -31,9 +31,9 @@
 #'
 #' @details The main output contains the following columns:
 #' - study_area_id: ID or name of the study case region
-#' - abs_distance_km: average expected geographic distance shift between t1 and
+#' - distance_km: average expected geographic distance shift between t1 and
 #'  t2
-#' - null_mod_NS_shift: average expected North-South shift between t1 and t2,
+#' - null_mod_SN_shift: average expected South-North shift between t1 and t2,
 #' in absolute values
 #' - null_mod_EW_shift: average expected East-West shift between t1 and t2,
 #' in absolute values
@@ -94,7 +94,7 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   
   # Visible binding for global variable
   survey <- elev <- X <- Y <- mean_X <- mean_Y <- km <- m <- NULL
-  abs_distance_km <- NS_dist <- EW_dist <- abs_elev <- p_lat <- NULL
+  distance_km <- NS_dist <- EW_dist <- abs_elev <- p_lat <- NULL
   
   # Spherical geometry off
   sf::sf_use_s2(FALSE)
@@ -235,13 +235,13 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   }
   
   # Absolute distance
-  param_positions$abs_distance_km <-
+  param_positions$distance_km <-
     sf::st_distance(param_positions$geometry_t1,
                     param_positions$geometry_t2,
                     by_element = TRUE)
   
-  param_positions$abs_distance_km <-
-    units::set_units(param_positions$abs_distance_km, km)
+  param_positions$distance_km <-
+    units::set_units(param_positions$distance_km, km)
   if(!is.null(elevation)){
     param_positions$abs_elev <- abs(param_positions$elev_t1 -
                                       param_positions$elev_t2)
@@ -261,9 +261,9 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
                             param_positions_bearing_t2)
   
   # Calculate projected South-North and East-West distances
-  param_positions$NS_dist <- abs(param_positions$abs_distance_km *
+  param_positions$NS_dist <- abs(param_positions$distance_km *
                                    cos((param_positions$bearing)*(pi/180)))
-  param_positions$EW_dist <- abs(param_positions$abs_distance_km *
+  param_positions$EW_dist <- abs(param_positions$distance_km *
                                    sin((param_positions$bearing)*(pi/180)))
   
   # Saving all bootstraps when raw_output is TRUE
@@ -276,9 +276,9 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   if(!is.null(elevation)){
     param_positions_summary <- dplyr::summarize(
       param_positions_summary,
-      abs_distance_km = mean(abs_distance_km, na.rm = TRUE),
+      distance_km = mean(distance_km, na.rm = TRUE),
       # null-model expectation on absolute south-north shifts
-      null_mod_NS_shift = as.numeric(mean(NS_dist, na.rm = TRUE)),
+      null_mod_SN_shift = as.numeric(mean(NS_dist, na.rm = TRUE)),
       # null-model expectation on absolute west-east shifts
       null_mod_EW_shift = as.numeric(mean(EW_dist, na.rm = TRUE)),
       # null-model expectation on absolute elevational shifts
@@ -287,9 +287,9 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   } else{
     param_positions_summary <- dplyr::summarize(
       param_positions_summary,
-      abs_distance_km = mean(abs_distance_km, na.rm = TRUE),
+      distance_km = mean(distance_km, na.rm = TRUE),
       # null-model expectation on absolute south-north shifts
-      null_mod_NS_shift = as.numeric(mean(NS_dist, na.rm = TRUE)),
+      null_mod_SN_shift = as.numeric(mean(NS_dist, na.rm = TRUE)),
       # null-model expectation on absolute west-east shifts
       null_mod_EW_shift = as.numeric(mean(EW_dist, na.rm = TRUE))                  
     )
@@ -297,9 +297,9 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   
   # Calculate LBI
   param_positions_summary$p_lat <-
-    (param_positions_summary$null_mod_NS_shift/
+    (param_positions_summary$null_mod_SN_shift/
        param_positions_summary$null_mod_EW_shift ) /
-    (1 + param_positions_summary$null_mod_NS_shift/
+    (1 + param_positions_summary$null_mod_SN_shift/
        param_positions_summary$null_mod_EW_shift )
   param_positions_summary$LBI <- (param_positions_summary$p_lat -0.5 ) * 2
   

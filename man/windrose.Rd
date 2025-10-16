@@ -60,10 +60,10 @@ study_area <- sf::st_union(study_area)
 po <- LBI(study_area_id = "Sweden", study_area_polygon = study_area,
 nobs = 10, nboot = 10, fact_location = 10, elevation = NULL,
 raw_output = TRUE)
-test <- as.data.frame(po$all[, c("study_area_id", "abs_distance_km",
+test <- as.data.frame(po$all[, c("study_area_id", "distance_km",
 "bearing", "rep")])
-test$abs_distance_km <- as.numeric(test$abs_distance_km)
-pop <- windrose(data = test, spd = "abs_distance_km", dir = "bearing")
+test$distance_km <- as.numeric(test$distance_km)
+pop <- windrose(data = test, spd = "distance_km", dir = "bearing")
 }
 
 }

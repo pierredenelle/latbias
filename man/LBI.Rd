@@ -50,9 +50,9 @@ multiple times (see details).
 The main output contains the following columns:
 \itemize{
 \item study_area_id: ID or name of the study case region
-\item abs_distance_km: average expected geographic distance shift between t1 and
+\item distance_km: average expected geographic distance shift between t1 and
 t2
-\item null_mod_NS_shift: average expected North-South shift between t1 and t2,
+\item null_mod_SN_shift: average expected South-North shift between t1 and t2,
 in absolute values
 \item null_mod_EW_shift: average expected East-West shift between t1 and t2,
 in absolute values

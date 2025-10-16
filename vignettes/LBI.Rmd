@@ -116,10 +116,10 @@ Windrose function.
 
 ```{r windrose}
 test <- as.data.frame(
-  lbi_sweden_all$all[, c("study_area_id", "abs_distance_km",
+  lbi_sweden_all$all[, c("study_area_id", "distance_km",
                          "bearing", "rep")])
-test$abs_distance_km <- as.numeric(test$abs_distance_km)
-pop <- windrose(data = test, spd = "abs_distance_km", dir = "bearing")
+test$distance_km <- as.numeric(test$distance_km)
+pop <- windrose(data = test, spd = "distance_km", dir = "bearing")
 ```
 
 # 4. References
