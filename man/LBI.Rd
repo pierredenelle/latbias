@@ -62,10 +62,12 @@ t2, in absolute values
 }
 
 LBI formula is
-LBI = 2 x (mean(|Anlat/Anlon|)/(1+mean(|Anlat/Anlon|)-0.5)
-with Anlat and Anlon denoting the geographic displacement of the centroid
-positions of both sets of observation in the nth iteration by means in the
-latitudinal and the longitudinal dimension.
+
+\eqn{LBI = 2\times(\frac{mean(|\frac{A_nlat}{A_nlon}|)}{1+mean(|\frac{A_nlat}{A_nlon}|)}-0.5)}
+
+with \eqn{A_nlat} and \eqn{A_nlon} denoting the geographic displacement of
+the centroid positions of both sets of observation in the nth iteration by
+means in the latitudinal and the longitudinal dimension.
 }
 \examples{
 
@@ -75,11 +77,12 @@ study_area <- sf::st_union(study_area)
 
 LBI(study_area_id = "Sweden", study_area_polygon = study_area,
 nobs = 10, nboot = 10, fact_location = 10, elevation = NULL)
-\donttest{
+
 # With elevation
 elevation_df <- elevatr::get_elev_raster(
 locations = sf::st_as_sf(study_area), z = 5)
-}
+LBI(study_area_id = "Sweden", study_area_polygon = study_area,
+nobs = 10, nboot = 10, fact_location = 10, elevation = elevation_df)
 
 }
 \references{

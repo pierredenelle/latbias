@@ -43,10 +43,12 @@
 #' - LBI: the Latitudinal Bias Index value
 #' 
 #' LBI formula is
-#' LBI = 2 x (mean(|Anlat/Anlon|)/(1+mean(|Anlat/Anlon|)-0.5)
-#' with Anlat and Anlon denoting the geographic displacement of the centroid
-#' positions of both sets of observation in the nth iteration by means in the
-#'  latitudinal and the longitudinal dimension.
+#' 
+#' \eqn{LBI = 2\times(\frac{mean(|\frac{A_nlat}{A_nlon}|)}{1+mean(|\frac{A_nlat}{A_nlon}|)}-0.5)}
+#' 
+#' with \eqn{A_nlat} and \eqn{A_nlon} denoting the geographic displacement of
+#' the centroid positions of both sets of observation in the nth iteration by
+#' means in the latitudinal and the longitudinal dimension.
 #' 
 #' @references
 #'      Sanczuk et al. submitted.
@@ -59,11 +61,12 @@
 #' 
 #' LBI(study_area_id = "Sweden", study_area_polygon = study_area,
 #' nobs = 10, nboot = 10, fact_location = 10, elevation = NULL)
-#' \donttest{
+#'
 #' # With elevation
 #' elevation_df <- elevatr::get_elev_raster(
 #' locations = sf::st_as_sf(study_area), z = 5)
-#' }
+#' LBI(study_area_id = "Sweden", study_area_polygon = study_area,
+#' nobs = 10, nboot = 10, fact_location = 10, elevation = elevation_df)
 #' 
 #' @importFrom sf sf_use_s2 st_make_valid st_transform st_centroid st_bbox
 #' @importFrom sf st_sample st_as_sf st_distance
@@ -91,9 +94,6 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   controls(args = raw_output, data = NULL, type = "logical")
   
   if(!is.null(elevation)){
-    # if(is.na(elevation)){
-    #   stop("elevation must be an unprojected (WGS84) RasterLayer.")
-    # }
     if(as.character(class(elevation)) != "RasterLayer"){
       stop("class(elevation) != 'RasterLayer'
            elevation must be an unprojected (WGS84) RasterLayer.")
@@ -123,8 +123,8 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   local_centre <- round(local_centre)  
   
   # reproject study area to LAEA with origin = the study area centroid
-  proj <- paste0("+proj=laea +x_0=0 +y_0=0 +lon_0=",
-                 local_centre[1], " +lat_0=", local_centre[2])
+  proj <- paste0("+proj=laea +x_0=0 +y_0=0 +lon_0=", local_centre[1],
+                 " +lat_0=", local_centre[2])
   
   # generate random points
   # define pool of location that can be sampled from
@@ -139,9 +139,13 @@ LBI <- function(study_area_id, study_area_polygon, nobs = 250, nboot = 1000,
   random_points$study_area_id <- study_area_id
   
   # If elevation is provided, extract elevation data for each location
-  random_points$elev <- ifelse(class(elevation) == "RasterLayer",
-                               terra::extract(elevation, random_points), NA)
-
+  if(inherits(elevation, "RasterLayer")) {  
+    random_points$elev <- terra::extract(elevation, random_points)
+  }
+  else{
+    random_points$elev <- NA
+  }
+  
   # project to local projection to avoid spatial distortion
   random_points <- sf::st_transform(random_points, proj) 
   
