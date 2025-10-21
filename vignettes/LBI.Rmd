@@ -66,7 +66,7 @@ An LBI value of zero represents a perfect balanced study design, meaning that th
 
 We first take the polygon delineating Sweden as an example.  
 
-```{r study_case, fig.width = 3, fig.height = 3}
+```{r study_case}
 study_area <- rnaturalearth::ne_countries(scale = 50, continent = "Europe",
                                           country = "Sweden", type = "map_units", returnclass = "sf")
 study_area <- sf::st_union(study_area)
@@ -74,7 +74,7 @@ study_area <- sf::st_union(study_area)
 
 We then calculate the LBI with the shape of Sweden.  
 
-```{r LBI_calculation, fig.width = 3, fig.height = 3}
+```{r LBI_calculation, echo = TRUE, eval = FALSE}
 lbi_sweden <-
   LBI(study_area_id = "Sweden", study_area_polygon = study_area,
       nobs = 10, nboot = 50, fact_location = 5, elevation = NULL)
@@ -86,7 +86,7 @@ In addition to the geographic distance between sampled points, we can also
 include the difference in terms of elevation. An unprojected raster can be
 added with teh argument `elevation` in the function `LBI()`.
 
-```{r LBI_elevation, fig.width = 3, fig.height = 3}
+```{r LBI_elevation, echo = TRUE, eval = FALSE}
 # With elevation
 elevation_df <- elevatr::get_elev_raster(locations = st_as_sf(study_area),
                                          z = 5)
