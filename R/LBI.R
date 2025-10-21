@@ -54,7 +54,7 @@
 #'      Sanczuk et al. submitted.
 #'
 #' @examples
-#' 
+#' \donttest{
 #' study_area <- rnaturalearth::ne_countries(scale = 110, continent = "Europe",
 #' country = "Sweden", type = "map_units", returnclass = "sf")
 #' study_area <- sf::st_union(study_area)
@@ -67,6 +67,7 @@
 #' locations = sf::st_as_sf(study_area), z = 5)
 #' LBI(study_area_id = "Sweden", study_area_polygon = study_area,
 #' nobs = 10, nboot = 10, fact_location = 5, elevation = elevation_df)
+#' }
 #' 
 #' @importFrom sf sf_use_s2 st_make_valid st_transform st_centroid st_bbox
 #' @importFrom sf st_sample st_as_sf st_distance

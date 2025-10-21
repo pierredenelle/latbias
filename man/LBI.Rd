@@ -70,7 +70,7 @@ the centroid positions of both sets of observation in the nth iteration by
 means in the latitudinal and the longitudinal dimension.
 }
 \examples{
-
+\donttest{
 study_area <- rnaturalearth::ne_countries(scale = 110, continent = "Europe",
 country = "Sweden", type = "map_units", returnclass = "sf")
 study_area <- sf::st_union(study_area)
@@ -83,6 +83,7 @@ elevation_df <- elevatr::get_elev_raster(
 locations = sf::st_as_sf(study_area), z = 5)
 LBI(study_area_id = "Sweden", study_area_polygon = study_area,
 nobs = 10, nboot = 10, fact_location = 5, elevation = elevation_df)
+}
 
 }
 \references{
