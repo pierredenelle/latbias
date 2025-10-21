@@ -10,7 +10,12 @@ Authors@R: c(
   )
 Description: Studies that report shifts in species distributions may be biased
   by the shape of the study area. The main functionality of this package is to
-  calculate the Latitudinal Bias Index (LBI) for any given shape.
+  calculate the Latitudinal Bias Index (LBI) for any given shape. The LBI is
+  bounded between +1 (100% probability to exclusively record latitudinal
+  shifts, i.e., range shifts data sampled along a perfectly South-North
+  oriented straight line) and -1 (100% probability to exclusively record
+  longitudinal shifts, i.e., range shifts data sampled along a perfectly
+  East-West oriented straight line).
 Depends:
   R (>= 3.5.3)
 License: GPL (>= 2)
