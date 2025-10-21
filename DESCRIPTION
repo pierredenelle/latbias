@@ -9,8 +9,8 @@ Authors@R: c(
     role = c("aut" ), comment = c(ORCID = "0000-0003-1107-4905"))
   )
 Description: Studies that report shifts in species distributions may be biased
-  by the shape of the study area. Latbias's main functionality is to calculate
-  the Latitudinal Bias Index (LBI) for any given shape.
+  by the shape of the study area. The main functionality of this package is to
+  calculate the Latitudinal Bias Index (LBI) for any given shape.
 Depends:
   R (>= 3.5.3)
 License: GPL (>= 2)

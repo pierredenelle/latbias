@@ -77,7 +77,7 @@ We then calculate the LBI with the shape of Sweden.
 ```{r LBI_calculation, fig.width = 3, fig.height = 3}
 lbi_sweden <-
   LBI(study_area_id = "Sweden", study_area_polygon = study_area,
-      nobs = 100, nboot = 500, fact_location = 10, elevation = NULL)
+      nobs = 10, nboot = 50, fact_location = 10, elevation = NULL)
 
 lbi_sweden
 ```
@@ -106,7 +106,7 @@ results.
 ```{r one_bootstrap}
 lbi_sweden_all <-
   LBI(study_area_id = "Sweden", study_area_polygon = study_area,
-      nobs = 100, nboot = 500, fact_location = 10, elevation = NULL,
+      nobs = 10, nboot = 50, fact_location = 10, elevation = NULL,
       raw_output = TRUE)
 ```
 
@@ -118,8 +118,7 @@ test <- as.data.frame(
   lbi_sweden_all$all[, c("study_area_id", "distance_km",
                          "bearing", "rep")])
 test$distance_km <- as.numeric(test$distance_km)
-windrose1 <- windrose(data = test, spd = "distance_km", dir = "bearing")
-windrose1
+windrose(data = test, spd = "distance_km", dir = "bearing")
 ```
 
 # 4. References
