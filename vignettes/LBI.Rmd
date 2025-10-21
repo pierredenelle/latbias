@@ -77,7 +77,7 @@ We then calculate the LBI with the shape of Sweden.
 ```{r LBI_calculation, fig.width = 3, fig.height = 3}
 lbi_sweden <-
   LBI(study_area_id = "Sweden", study_area_polygon = study_area,
-      nobs = 10, nboot = 50, fact_location = 10, elevation = NULL)
+      nobs = 10, nboot = 50, fact_location = 5, elevation = NULL)
 
 lbi_sweden
 ```
@@ -92,7 +92,7 @@ elevation_df <- elevatr::get_elev_raster(locations = st_as_sf(study_area),
                                          z = 5)
 
 lbi_elev <- LBI(study_area_id = "Sweden", study_area_polygon = study_area,
-                nobs = 10, nboot = 10, fact_location = 10,
+                nobs = 10, nboot = 10, fact_location = 5,
                 elevation = elevation_df)
 ```
 
@@ -106,7 +106,7 @@ results.
 ```{r one_bootstrap}
 lbi_sweden_all <-
   LBI(study_area_id = "Sweden", study_area_polygon = study_area,
-      nobs = 10, nboot = 50, fact_location = 10, elevation = NULL,
+      nobs = 10, nboot = 50, fact_location = 5, elevation = NULL,
       raw_output = TRUE)
 ```
 

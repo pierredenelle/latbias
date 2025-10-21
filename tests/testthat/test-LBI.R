@@ -12,7 +12,7 @@ random_point <-
 # Tests for invalid outputs ----
 test_that("invalid outputs", {
   test <- LBI(study_area_id = "Sweden", study_area_polygon = study_area,
-              nobs = 10, nboot = 10, fact_location = 10, elevation = NULL)
+              nobs = 10, nboot = 10, fact_location = 5, elevation = NULL)
   expect_identical(class(test), c("data.frame"))
 })
 
